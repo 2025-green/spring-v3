@@ -11,7 +11,7 @@
     </div>
 
     <div class="d-flex justify-content-end">
-        <b>작성자</b> : 익명
+        <b>작성자</b> : {{model.boardUsername}}
     </div>
 
     <!-- 게시글내용 -->
@@ -22,6 +22,45 @@
             {{model.content}}
         </div>
     </div>
+
+    <!-- 댓글 -->
+    <div class="card mt-3">
+        <!-- 댓글등록 -->
+        <div class="card-body">
+            <form action="/reply/save" method="post">
+                <textarea class="form-control" rows="2" name="comment"></textarea>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn mt-1" style="background-color: #999AA0; color: white;">
+                        댓글등록
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 댓글목록 -->
+        <div class="card-footer">
+            <b>댓글리스트</b>
+        </div>
+        <div class="list-group">
+
+            {{#model.replies}}
+                <!-- 댓글아이템 -->
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex">
+                        <div class="px-1 me-1 bg-secondary text-white rounded">{{replyUsername}}</div>
+                        <div>{{comment}}</div>
+                    </div>
+                    <form action="/reply/{{replyId}}/delete" method="post">
+                        <button class="btn">🗑</button>
+                    </form>
+                </div>
+            {{/model.replies}}
+
+
+
+        </div>
+    </div>
+
 </div>
 
 

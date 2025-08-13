@@ -3,9 +3,10 @@ package com.mtcoding.springv1.controller;
 import com.mtcoding.springv1.controller.dto.BoardDetailResponseDTO;
 import com.mtcoding.springv1.controller.dto.BoardResponseDTO;
 import com.mtcoding.springv1.controller.dto.BoardSaveRequestDTO;
-import com.mtcoding.springv1.domain.board.BoardRepository;
 import com.mtcoding.springv1.domain.board.BoardService;
+import com.mtcoding.springv1.domain.user.User;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
-    private final BoardRepository boardRepository;
+    private final HttpSession session;
 
     // select * from board_tb where title = '스프링';
     // localhost:8080/board?title=스프링
@@ -27,19 +28,31 @@ public class BoardController {
     // localhost:8080/board/1 -> PathValue
     @PostMapping("/board/{id}/update")
     public String updateById(@PathVariable("id") int id, BoardSaveRequestDTO reqDTO) {
-        boardService.게시글수정(id, reqDTO);
+        User sessionUser = (User) session.getAttribute("sessionUser");
+
+        if (sessionUser == null) throw new RuntimeException("로그인 하세요");
+
+        boardService.게시글수정(id, reqDTO, sessionUser);
         return "redirect:/board/" + id;
     }
 
     @PostMapping("/board/{id}/delete")
     public String deleteById(@PathVariable("id") int id) {
-        boardService.게시글삭제(id);
+        User sessionUser = (User) session.getAttribute("sessionUser");
+
+        if (sessionUser == null) throw new RuntimeException("로그인 하세요");
+
+        boardService.게시글삭제(id, sessionUser);
         return "redirect:/board";
     }
 
     @PostMapping("/board/save")
     public String save(BoardSaveRequestDTO reqDTO) {
-        boardService.게시글쓰기(reqDTO);
+        User sessionUser = (User) session.getAttribute("sessionUser");
+
+        if (sessionUser == null) throw new RuntimeException("로그인 하세요");
+
+        boardService.게시글쓰기(reqDTO, sessionUser);
         return "redirect:/board";
     }
 
@@ -59,6 +72,10 @@ public class BoardController {
 
     @GetMapping("/board/{id}/update-form")
     public String updateForm(@PathVariable("id") int id, HttpServletRequest request) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+
+        if (sessionUser == null) throw new RuntimeException("로그인 하세요");
+
         BoardDetailResponseDTO respDTO = boardService.게시글상세(id);
 
         request.setAttribute("model", respDTO);
