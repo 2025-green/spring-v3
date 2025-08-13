@@ -33,7 +33,7 @@ public class BoardService {
 
     public BoardDetailResponseDTO 게시글상세(int id) {
         Board board = boardJpaRepository.findByIdJoinUserAndReplies(id); // board
-
+        
         BoardDetailResponseDTO respDTO = new BoardDetailResponseDTO(board);
 
         return respDTO;

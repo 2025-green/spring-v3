@@ -33,7 +33,7 @@ public class BoardJpaRepository {
     }
 
     public Board findByIdJoinUserAndReplies(int id) {
-        Query query = em.createQuery("select b from Board b join fetch b.user left join fetch b.replies rt left join fetch rt.user where b.id = :id", Board.class);
+        Query query = em.createQuery("select b from Board b join fetch b.user left join fetch b.replies rt left join fetch rt.user where b.id = :id order by rt.id desc", Board.class);
         query.setParameter("id", id);
         return (Board) query.getSingleResult();
     }

@@ -19,7 +19,14 @@ public class Reply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
+
+    public Reply(Integer id, String comment, User user, Board board) {
+        this.id = id;
+        this.comment = comment;
+        this.user = user;
+        this.board = board;
+    }
 }

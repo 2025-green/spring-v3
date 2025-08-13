@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 public class ReplyJpaRepository {
     private final EntityManager em;
 
+    public Reply findById(int id) {
+        return em.find(Reply.class, id);
+    }
+
     public Reply save(Reply reply) {
         em.persist(reply);
         return reply;
